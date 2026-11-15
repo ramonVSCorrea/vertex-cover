@@ -1,0 +1,9 @@
+instance_id,family,seed,n,m,p,file
+caminho_n10,path,NA,10,9,NA,caminho_n10.txt
+ciclo_n9,cycle,NA,9,9,NA,ciclo_n9.txt
+estrela_n10,star,NA,10,9,NA,estrela_n10.txt
+completo_n10,complete,NA,10,45,NA,completo_n10.txt
+bipartido_n10,complete_bipartite,NA,10,25,NA,bipartido_n10.txt
+sem_arestas_n10,empty,NA,10,0,NA,sem_arestas_n10.txt
+aleatorio_n10_p03,erdos_renyi,20261115,10,10,0.3,aleatorio_n10_p03.txt
+aleatorio_n12_p05,erdos_renyi,20261116,12,32,0.5,aleatorio_n12_p05.txt

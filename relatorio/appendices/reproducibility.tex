@@ -1,0 +1,82 @@
+\clearpage
+\section{Anexo de reprodutibilidade e rastreabilidade}
+\label{app:reproducibility}
+
+O projeto LaTeX é autocontido: as entradas das figuras, tabelas,
+listagens e bibliografia são locais. \path{dados/benchmark.csv}
+e \path{dados/benchmark-runs.csv} são cópias literais dos CSVs
+analisados; \path{dados/instancias/} contém os grafos e o
+manifesto. Os seis PNGs em \path{figures/} são os originais
+do benchmark. Os hashes completos e a auditoria constam de
+\path{evidencias/}.
+
+O relatório usa os arquivos \path{sbc-template.sty} e
+\path{sbc.bst} sem alterações, obtidos do template SBC
+fornecido pelo grupo e identificado na página oficial do
+Overleaf.\footnote{\raggedright\url{https://www.overleaf.com/latex/templates/sbc-conferences-template/blbxwjwzdngr}}
+O documento preserva papel A4, coluna única, margens,
+fonte principal, cabeçalho de autores, legendas,
+ausência de numeração de páginas e estilo bibliográfico
+do modelo. O material inclui uma cópia do template de
+origem para conferência.
+
+\subsection{Reproduzir a aplicação e o protocolo}
+
+Na raiz do projeto Java, os comandos a seguir compilam e
+testam a aplicação. A geração usa as mesmas sementes;
+uma nova medição pode produzir tempos, timeouts e
+incumbentes diferentes, e não deve substituir
+silenciosamente os dados auditados.
+
+\begin{lstlisting}[language={},numbers=none,basicstyle=\ttfamily\footnotesize,caption={Compilação e testes usando somente o JDK 17.},label={lst:commands}]
+javac -encoding UTF-8 --release 17 -Xlint:all -d out src/*.java tests/*.java
+java "-Dfile.encoding=UTF-8" "-Djava.awt.headless=true" -cp out TestRunner
+java -cp out Main generate --output data/instances/ --seed 20261115
+\end{lstlisting}
+
+O comando completo da medição original é mostrado na
+Listagem~\ref{lst:benchmark-command}. Deve ser informado
+em uma única linha; as quebras exibidas na listagem são
+apenas visuais. Para guardar uma nova execução, escolha
+outro caminho de saída.
+
+\begin{lstlisting}[language={},numbers=none,basicstyle=\ttfamily\footnotesize,caption={Configuração do benchmark original, com três medições por algoritmo e instância.},label={lst:benchmark-command}]
+java -Xms128m -Xmx512m "-Dfile.encoding=UTF-8" "-Djava.awt.headless=true" -cp out Main benchmark --timeout-ms 5000 --repetitions 3 --warmup 100 --output data/results/benchmark.csv
+\end{lstlisting}
+
+Para uso didático, o \path{executar.cmd} da aplicação
+compila e abre um menu; seu experimento rápido de
+oito grafos não é a amostra deste artigo.
+A interface completa mantém os comandos individuais.
+
+\subsection{Reproduzir o pós-processamento e o PDF}
+
+Na raiz deste projeto LaTeX, o utilitário
+\path{ferramentas/ReportStats.java} audita os dados e
+regenera as tabelas, sem medir tempos novos:
+
+\begin{lstlisting}[language={},numbers=none,basicstyle=\ttfamily\footnotesize,caption={Pós-processamento separado da aplicação experimental.},label={lst:postprocess}]
+javac -encoding UTF-8 --release 17 -d build/java codigo/src/*.java codigo/tests/*.java ferramentas/ReportStats.java
+java "-Dfile.encoding=UTF-8" "-Djava.awt.headless=true" -cp build/java ReportStats
+\end{lstlisting}
+
+O \texttt{main.tex} compila com pdfLaTeX e BibTeX.
+No Overleaf, basta importar o ZIP fornecido e selecionar
+\path{main.tex} como documento principal, usando
+pdfLaTeX. O Java não é necessário para compilar o PDF,
+pois as tabelas e figuras já estão incluídas. A
+Listagem~\ref{lst:latex-build} mostra a sequência local.
+
+\begin{lstlisting}[language={},numbers=none,basicstyle=\ttfamily\footnotesize,caption={Compilação local do artigo e resolução de referências cruzadas.},label={lst:latex-build}]
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+bibtex main
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+\end{lstlisting}
+
+Os nomes completos dos autores constam dos metadados do
+PDF e do README; a linha do título utiliza iniciais
+intermediárias para manter os três autores em uma linha.
+O pacote eletrônico permite conferir os dados e os
+fontes independentemente da publicação posterior em um
+repositório ou projeto compartilhado.

@@ -1,0 +1,1 @@
+Preservacao conferida por SHA-256: 551 arquivos originais de src/, tests/, docs/ e data/ permanecem inalterados. As 17 copias Java e os dois arquivos de estilo SBC correspondem byte a byte aos originais. Apenas relatorio/ foi criado no projeto.

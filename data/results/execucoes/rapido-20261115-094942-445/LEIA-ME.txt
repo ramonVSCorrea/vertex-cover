@@ -1,0 +1,24 @@
+EXPERIMENTO DE COBERTURA POR VÉRTICES
+===================================
+Modalidade: Rápido e didático (8 grafos)
+Instâncias: 8
+Repetições por algoritmo/instância: 3
+Timeout do exato por medição: 1000 ms
+
+Esta pasta foi criada para uma nova execução e não substitui o benchmark original.
+O modo rápido é didático: não substitui as 230 instâncias do protocolo completo.
+
+Arquivos:
+  instances/                 Grafos realmente usados e manifesto com sementes.
+  benchmark.csv              Uma linha por instância, selecionada pela mediana.
+  benchmark-runs.csv         Todas as medições, inclusive timeouts.
+  benchmark-environment.md   Ambiente e parâmetros da execução.
+  figures/                   Seis PNGs; abra-os para visualizar os resultados.
+  relatorio.md               Tabelas e análise dos CSVs reais.
+  CONCLUIDO.txt              Existe somente quando todas as etapas terminam.
+
+OPTIMAL: mínimo comprovado.
+TIME_LIMIT: melhor cobertura conhecida, sem prova de ótimo.
+NA: valor desconhecido ou não aplicável; não significa zero.
+
+Comece por relatorio.md e depois abra figures/.

@@ -1,0 +1,21 @@
+AUDITORIA DOS DADOS DO RELATÓRIO
+==============================
+CSVs: 230 linhas-resumo, 690 linhas individuais.
+Instâncias: 200 aleatórias, 30 estruturadas.
+Provas de ótimo: 228; timeouts no resumo: 2; timeouts individuais: 6.
+Razão definida: 223; ótimo zero: 5.
+Razão média: 1,492981549543; mediana superior: 1,400000000000; gap médio: 49,298154954311%.
+Aproximação com tempo menor no resumo: 230 de 230.
+Cardinalidade igual ao ótimo positivo: 2; incluindo ótimos zero: 7.
+Razão exatamente 2: 47.
+Seleções por mediana e repetições conferidas contra todas as linhas individuais.
+Contagens n/m, densidades, sementes e aproximações conferidas com as instâncias.
+Flags de validade e convenções de ótimo/NA conferidas em todas as linhas.
+Os CSVs não guardam os vértices das soluções exatas: sua validade foi verificada
+pelo benchmark na execução original, não reconstruída desta exportação.
+Testes atuais são executados separadamente; não são novas medições do benchmark.
+Quartis: postos ceil(q*N), base um, para q=0.25 e 0.75.
+Mediana entre instâncias: elemento floor(N/2), base zero (mediana superior).
+Intervalos das tabelas são [Q1; Q3], não intervalos de confiança.
+SHA-256 benchmark.csv: e4e1d95f17c429d6e29fa7955b611f72e93de5824a04df5f1d6e196065a07607
+SHA-256 benchmark-runs.csv: a58b4644f3349ee267273e1751f0e026c32151c58fd3d558e298d0234afe3a53

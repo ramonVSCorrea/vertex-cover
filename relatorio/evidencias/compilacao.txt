@@ -1,0 +1,59 @@
+VALIDAÇÃO LOCAL DO RELATÓRIO SBC
+==============================
+Data: 15/11/2026
+Documento principal: main.tex
+Compilador: pdfLaTeX / pdfTeX 1.40.28, MiKTeX 25.12
+Bibliografia: BibTeX 0.99e, arquivo sbc.bst original
+
+Sequência executada por compilar.cmd:
+  pdflatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+  bibtex main
+  pdflatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+  pdflatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+  pdflatex -interaction=nonstopmode -halt-on-error -file-line-error main.tex
+
+Resultado na pasta original do relatório:
+  SUCESSO: main.pdf, 36 páginas, papel A4.
+  Sem referências/citações indefinidas, caracteres ausentes, rótulos duplicados
+  ou caixas Overfull no log final.
+  Abstract e resumo: oito linhas cada, ambos na primeira página.
+  16 grupos de testes Java aprovados em cópias dos fontes.
+  Auditoria dos CSVs e dos campos das medianas concluída.
+  Original Java, dados e documentação preservados: ver preservacao-originais.txt.
+
+Arquivos de evidência:
+  latex-final.log       Log integral do pdfLaTeX final.
+  bibtex-final.blg      Log do BibTeX.
+  pdfinfo.txt           Metadados e tamanho do PDF.
+  testes-java.txt       Execução real dos 16 grupos de testes.
+  auditoria-dados.txt   Auditoria e estatísticas dos CSVs.
+  sha256-origens.csv    Integridade das cópias do material original.
+
+Compatibilidade:
+  O sbc-template.sty v2017 fornecido omite o terceiro argumento de uma
+  verificação de hyperref no hook de fim do preâmbulo. Um token neutro
+  foi anexado ao mesmo hook no main.tex; .sty e .bst não foram editados.
+  Babel utiliza a opção atual brazilian e English no abstract.
+
+Observações não bloqueantes:
+  Oito avisos Underfull vbox, sem conteúdo fora das margens; foi preservado
+  o flushbottom oficial. Não foram suprimidos artificialmente do log.
+  O MiKTeX informa que suas atualizações globais ainda não foram verificadas;
+  isso não impediu a compilação. Nenhuma atualização global foi realizada.
+
+A conferência adicional de extração do ZIP e compilação autocontida
+é registrada ao final deste arquivo após sua execução.
+
+VALIDAÇÃO DO ZIP EXTRAÍDO
+========================
+SUCESSO: relatorio-overleaf.zip foi extraído em uma pasta independente
+sob Temp/opencode/vertex-cover-overleaf-4d912f62f8cd47b6982e8c654ccd2c0d.
+Nessa pasta foram executados compilar.cmd e ferramentas/validar.ps1.
+Resultado: PDF A4 de 36 páginas; integridade, arquivos locais,
+citações e referências cruzadas conferidos, sem dependência dos
+diretórios da aplicação original.
+
+O pacote final contém 304 arquivos com caminhos relativos portáteis.
+Após esta anotação, somente este registro de validação foi atualizado
+no ZIP; as entradas usadas pela compilação são as mesmas verificadas
+na extração. Não foi alegada publicação em uma conta Overleaf.

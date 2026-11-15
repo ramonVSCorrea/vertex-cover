@@ -1,0 +1,158 @@
+\section{Fundamentação Teórica}
+\label{sec:theory}
+
+\subsection{Grafos, emparelhamentos e cobertura por vértices}
+
+Um grafo não direcionado $G=(V,E)$ possui um conjunto de vértices $V$ e um
+conjunto de arestas $E$, em que cada aresta é um par não ordenado de
+vértices. Neste trabalho, os grafos são simples: não há laços nem arestas
+paralelas. O grau $d_G(v)$ é a quantidade de arestas incidentes em $v$;
+um vértice de grau zero é isolado. Um grafo completo $K_n$ conecta todos
+os pares distintos. Um grafo bipartido admite uma partição
+$V=A\mathbin{\dot\cup}B$ sem arestas internas às partes; no bipartido
+completo $K_{a,b}$ existem todas as $ab$ arestas entre elas
+\cite{cormen2022}.
+
+Um emparelhamento (\emph{matching}) $M\subseteq E$ é um conjunto de arestas
+que não compartilham extremos. Ele é \emph{maximal} quando nenhuma aresta
+adicional pode ser incluída mantendo essa propriedade. Isso difere de
+um emparelhamento \emph{máximo}, que possui a maior cardinalidade entre
+todos os emparelhamentos do grafo. A maximalidade é suficiente para a
+aproximação implementada, embora não implique cardinalidade máxima
+\cite{vazirani2001}.
+
+Uma cobertura por vértices é um conjunto $C\subseteq V$ tal que
+\begin{equation}
+  \forall\,\{u,v\}\in E,\qquad u\in C\ \lor\ v\in C .
+  \label{eq:cover}
+\end{equation}
+O objetivo da otimização é
+\begin{equation}
+  \OPT(G)=\min\bigl\{|C|:\ C\subseteq V
+       \text{ satisfaz a Equação~\eqref{eq:cover}}\bigr\}.
+  \label{eq:opt}
+\end{equation}
+Uma cobertura \emph{válida} satisfaz a condição de cobertura; uma cobertura
+\emph{mínima} atinge o valor da Equação~\eqref{eq:opt}.
+Já a \emph{melhor conhecida} é apenas a
+menor cobertura válida encontrada durante uma busca. Ela só pode ser
+declarada ótima quando há uma demonstração de que nenhuma cobertura menor
+existe. Além disso, \emph{mínima} não significa apenas \emph{minimal}:
+não conseguir remover individualmente um vértice de uma cobertura não
+prova que sua cardinalidade é a menor possível.
+
+\subsection{Classes de complexidade e NP-Completude}
+
+As classes P e NP dizem respeito a problemas de decisão. P reúne os
+problemas decididos em tempo polinomial por um algoritmo determinístico.
+NP reúne os problemas cujas instâncias positivas possuem certificados de
+tamanho polinomial verificáveis em tempo polinomial. Portanto, pertencer
+a NP não significa, por si só, ser NP-completo \cite{garey1979,cormen2022}.
+
+Uma redução polinomial $A\leq_p B$ transforma cada instância de $A$ em uma
+instância de $B$, em tempo polinomial, preservando a resposta.
+Um problema é NP-difícil quando todo problema de NP se reduz a ele.
+Um problema de decisão é NP-completo quando, simultaneamente, pertence
+a NP e é NP-difícil. A igualdade P=NP permanece em aberto; assim,
+NP-Completude não autoriza afirmar que foi provada a inexistência de
+algoritmos polinomiais \cite{garey1979}.
+
+Para Vertex Cover de decisão, a entrada é $(G,k)$ e a pergunta é se existe
+uma cobertura $C$ com $|C|\leq k$. Dado um conjunto candidato,
+verificam-se seus índices, sua cardinalidade e as extremidades de todas
+as arestas. Com marcações por vértice, essa verificação custa
+$O(|V|+|E|)$, demonstrando o pertencimento a NP.
+
+Para a NP-dificuldade, utiliza-se \emph{Independent Set}, problema de
+decisão clássico NP-completo \cite{garey1979}. Dada a instância $(G,k)$,
+com $0\leq k\leq |V|$, constrói-se a instância $(G,k')$ de Vertex Cover,
+no mesmo grafo, em que
+\begin{equation}
+  k'=|V|-k,\qquad
+  S\text{ é independente em }G
+  \ \Longleftrightarrow\
+  V\setminus S\text{ é cobertura de }G .
+  \label{eq:reduction}
+\end{equation}
+
+Para provar o primeiro sentido da Equação~\eqref{eq:reduction},
+suponha que $S$ seja independente.
+Nenhuma aresta tem seus dois extremos em $S$; consequentemente, toda
+aresta tem algum extremo em $V\setminus S$, que é uma cobertura.
+Se $|S|\geq k$, essa cobertura tem tamanho no máximo $|V|-k$.
+No sentido inverso, se $C$ é cobertura, nenhuma aresta pode ter ambos
+os extremos em $V\setminus C$, pois ficaria descoberta. Logo,
+$V\setminus C$ é independente e, se $|C|\leq |V|-k$, possui pelo menos
+$k$ vértices.
+
+A transformação preserva a resposta e é polinomial: mantém o grafo e
+calcula um novo limite. Assim,
+Independent Set $\leq_p$ Vertex Cover. Com o pertencimento a NP,
+Vertex Cover de decisão é NP-completo. Essa equivalência se insere no
+estudo clássico de reduções entre problemas combinatórios
+\cite{karp1972,garey1979}. A versão de otimização é NP-difícil:
+resolver o mínimo permitiria responder à versão de decisão por uma
+comparação com $k$. Não se classifica aqui a otimização como
+NP-completa.
+
+\subsection{Aplicações e limites das modelagens}
+
+Uma primeira modelagem possível é o \textbf{monitoramento de conexões em
+redes de computadores}. Os vértices representam equipamentos, as arestas
+representam conexões e os vértices selecionados recebem monitores.
+Se observar uma das extremidades basta para monitorar a conexão,
+uma cobertura representa uma seleção suficiente. Restrições de
+capacidade, direção do tráfego, custo dos equipamentos e criptografia
+não estão contempladas pelo modelo simples.
+
+Uma segunda modelagem é a \textbf{seleção de pontos de inspeção em uma
+malha de infraestrutura}. Vértices representam locais de inspeção e
+arestas representam trechos entre esses locais. Se o requisito
+operacional consiste em atribuir a cada trecho ao menos uma
+extremidade com inspeção, minimizar os locais corresponde a Vertex
+Cover. Isso não garante, por si só, que um posto inspecione toda a
+extensão física de uma via, nem resolve restrições de deslocamento
+ou de disponibilidade das equipes.
+
+Uma terceira modelagem é a \textbf{instrumentação de uma rede de
+componentes industriais}. Estações ou equipamentos são vértices e
+interligações são arestas. Sob uma especificação que exija instrumentar
+ao menos uma ponta de cada interligação, os vértices escolhidos indicam
+onde instalar recursos. Se a aplicação real exigir ambas as pontas,
+pesos diferentes, redundância ou cobertura espacial contínua, o problema
+precisa ser reformulado. As três aplicações são correspondências de
+modelagem, não estudos de caso validados pelos experimentos deste artigo.
+
+\subsection{Abordagens algorítmicas existentes}
+
+A enumeração por \textbf{força bruta} examina os $2^{|V|}$ subconjuntos,
+verificando quais cobrem as arestas. É simples e pode servir como
+oráculo em entradas pequenas, mas seu custo exponencial restringe
+a escala. Técnicas de \textbf{ramificação} organizam essa enumeração
+com escolhas locais; limites e regras de redução podem reduzir o
+trabalho necessário, sem transformar a dificuldade geral em tempo
+polinomial \cite{fomin2010}.
+
+No \textbf{Branch and Bound}, uma solução factível limita superiormente
+o mínimo procurado, enquanto limites inferiores permitem descartar
+ramos sem potencial de melhoria. A implementação deste trabalho usa
+ramificação pelos extremos de uma aresta e emparelhamento residual
+para obter o limite inferior, conforme a Seção~\ref{sec:exact}.
+
+A \textbf{aproximação por emparelhamento maximal} seleciona os extremos
+das arestas de um matching maximal e garante fator~2
+\cite{cormen2022,vazirani2001}. Outra estratégia possível é escolher
+repetidamente o vértice de maior grau residual e remover suas arestas
+incidentes. Essa \textbf{heurística gulosa por grau} privilegia a
+cobertura imediata de muitas arestas. Não é o método aproximado
+avaliado aqui, nem recebe garantia de fator~2 sem análise própria.
+
+Também são relevantes formulações por \textbf{programação inteira},
+com variáveis binárias $x_v$ e restrições $x_u+x_v\geq 1$ para cada
+aresta. A relaxação linear admite arredondamento e métodos
+primal-dual de aproximação \cite{vazirani2001}. Em grafos bipartidos,
+a relação entre cobertura mínima e emparelhamento máximo permite
+algoritmos polinomiais específicos \cite{cormen2022}; isso não
+contradiz a NP-Completude em grafos gerais. O projeto experimental
+implementa somente Branch and Bound e matching maximal, sem
+resolvedores externos ou detecção especializada dessas famílias.

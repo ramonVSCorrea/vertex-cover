@@ -1,0 +1,129 @@
+\documentclass[12pt]{article}
+
+% Modelo oficial SBC, versão disponibilizada no template v2017.
+% sbc-template.sty e sbc.bst são cópias literais dos arquivos fornecidos.
+\usepackage{sbc-template}
+% Compatibilidade sem editar o estilo oficial: o hook v2017 omite o ramo
+% falso de \@ifpackageloaded{hyperref}. O token neutro evita consumir
+% o primeiro comando do próximo hook (por exemplo, o do babel).
+\AddToHook{begindocument/before}[sbc-template]{\relax}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,brazilian]{babel}
+\usepackage{graphicx,url}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{placeins}
+\usepackage[hidelinks]{hyperref}
+
+\sloppy
+\graphicspath{{figures/}}
+\addto\captionsbrazilian{\renewcommand{\refname}{Referências Bibliográficas}}
+\floatname{algorithm}{Algoritmo}
+\captionsetup[algorithm]{font={sf,bf,footnotesize},labelsep=period}
+\algrenewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\algrenewcommand{\algorithmicensure}{\textbf{Saída:}}
+\algrenewcommand{\algorithmicif}{\textbf{se}}
+\algrenewcommand{\algorithmicthen}{\textbf{então}}
+\algrenewcommand{\algorithmicelse}{\textbf{senão}}
+\algrenewcommand{\algorithmicfor}{\textbf{para}}
+\algrenewcommand{\algorithmicwhile}{\textbf{enquanto}}
+\algrenewcommand{\algorithmicdo}{\textbf{faça}}
+\algrenewcommand{\algorithmicend}{\textbf{fim}}
+\algrenewcommand{\algorithmicreturn}{\textbf{retornar}}
+\newcommand{\OPT}{\operatorname{OPT}}
+
+\lstdefinestyle{java}{
+  language=Java,
+  basicstyle=\ttfamily\fontsize{8}{9.5}\selectfont,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=6pt,
+  xleftmargin=1.8em,
+  frame=lines,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  tabsize=4,
+  captionpos=t,
+  inputencoding=utf8,
+  extendedchars=true,
+  literate=
+    {á}{{\'a}}1 {à}{{\`a}}1 {â}{{\^a}}1 {ã}{{\~a}}1
+    {é}{{\'e}}1 {ê}{{\^e}}1 {í}{{\'i}}1
+    {ó}{{\'o}}1 {ô}{{\^o}}1 {õ}{{\~o}}1 {ú}{{\'u}}1 {ü}{{\"u}}1 {ç}{{\c c}}1
+    {Á}{{\'A}}1 {À}{{\`A}}1 {Â}{{\^A}}1 {Ã}{{\~A}}1
+    {É}{{\'E}}1 {Ê}{{\^E}}1 {Í}{{\'I}}1
+    {Ó}{{\'O}}1 {Ô}{{\^O}}1 {Õ}{{\~O}}1 {Ú}{{\'U}}1 {Ü}{{\"U}}1 {Ç}{{\c C}}1
+    {º}{{\textordmasculine}}1 {ª}{{\textordfeminine}}1
+    {—}{{---}}1 {–}{{--}}1 {→}{{$\to$}}1 {≤}{{$\leq$}}1 {≥}{{$\geq$}}1
+}
+\lstset{style=java}
+\renewcommand{\lstlistingname}{Listagem}
+\input{tables/generated-macros}
+
+\title{Uma Análise Experimental de Algoritmos para o\\
+Problema da Cobertura Mínima por Vértices}
+
+% Iniciais intermediárias mantêm os três autores na linha prevista pelo SBC.
+% Nomes completos constam dos metadados do PDF e do README do projeto LaTeX.
+\author{Ian P. P. Bomfim\inst{1}, João M. A. Constâncio\inst{1}, Ramon V. S. Corrêa\inst{1}}
+\address{Pontifícia Universidade Católica de Minas Gerais (PUC Minas)\\
+  Projeto e Análise de Algoritmos -- Trabalho Prático 2\\
+  Professor: Walisson Ferreira de Carvalho}
+
+\hypersetup{
+  pdftitle={Uma Análise Experimental de Algoritmos para o Problema da Cobertura Mínima por Vértices},
+  pdfauthor={Ian Pereira Pinto Bomfim; João Miguel de Abreu Constâncio; Ramon Vinícius Silva Corrêa},
+  pdfsubject={Projeto e Análise de Algoritmos -- Java 17 puro -- Vertex Cover},
+  pdfkeywords={vertex cover, branch and bound, maximal matching, approximation algorithms}
+}
+
+\begin{document}
+\maketitle
+
+\begin{otherlanguage}{english}
+\begin{abstract}
+This paper compares a branch-and-bound solver and a maximal-matching
+2-approximation for minimum vertex cover, implemented in plain Java 17.
+The study uses 230 graphs and three measurements per algorithm and instance.
+The exact solver certifies 228 optima; two instances reach the time limit.
+Among 223 instances with a proven positive optimum, the mean approximation
+ratio is 1.493. The approximation is faster in all selected measurements.
+The analysis distinguishes feasible solutions from proven optima and discusses
+the limits of the experimental evidence.
+\end{abstract}
+\end{otherlanguage}
+
+\begin{resumo}
+Este trabalho compara Branch and Bound e uma aproximação por emparelhamento
+maximal para Cobertura Mínima por Vértices, implementados em Java 17 puro.
+Foram utilizados 230 grafos e três medições por algoritmo e instância.
+O exato comprovou 228 ótimos, com dois timeouts no resumo.
+Nas 223 instâncias com ótimo comprovado e positivo, a razão média da
+aproximação foi 1,493. A aproximação foi mais rápida em todas as medições
+selecionadas. A análise distingue soluções válidas de ótimos comprovados
+e explicita as limitações da evidência experimental.
+\end{resumo}
+
+\input{sections/introduction}
+\input{sections/theoretical_foundation}
+\input{sections/methodology}
+\input{sections/results}
+\input{sections/results_analysis}
+\input{sections/conclusion}
+
+\FloatBarrier
+\bibliographystyle{sbc}
+\bibliography{references}
+
+\clearpage
+\appendix
+\input{appendices/source_code}
+\input{appendices/reproducibility}
+\end{document}

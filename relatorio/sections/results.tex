@@ -1,0 +1,180 @@
+\FloatBarrier
+\section{Resultados}
+\label{sec:results}
+
+\subsection{Caracterização e conclusão da busca}
+
+A Tabela~\ref{tab:characterization} caracteriza as
+\TotalInstances{} instâncias do corpus, com intervalos calculados
+dos arquivos efetivamente medidos. Os grafos aleatórios apresentam
+de 2 a 313 arestas; as famílias estruturadas incluem tanto densidade
+zero como densidade um. Esses extremos não representam a mesma
+dificuldade para a busca, como mostram os resultados seguintes.
+
+\input{tables/characterization}
+
+No resumo pelas medianas, o algoritmo exato retornou
+\OptimalInstances{} resultados \texttt{OPTIMAL} e
+\TimeoutInstances{} resultados \texttt{TIME\_LIMIT}.
+Entre as \RawMeasurements{} medições individuais do exato,
+\RawTimeouts{} atingiram o limite, três em cada uma das duas
+instâncias não concluídas. A Figura~\ref{fig:status} apresenta
+as contagens por instância, não por repetição.
+As flags de validade do exato e da aproximação são verdadeiras
+em todas as linhas dos dois CSVs, coerentemente com a validação
+executada antes da exportação.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{06-status.png}
+\caption{Conclusão da busca exata nas 230 instâncias: 228 provas de ótimo e dois timeouts na execução selecionada de cada grafo. Fonte: benchmark original.}
+\label{fig:status}
+\end{figure}
+\FloatBarrier
+
+\subsection{Tempos por tamanho e densidade}
+
+A Tabela~\ref{tab:configurations} apresenta as 20 configurações
+aleatórias. A dispersão $[Q_1;Q_3]$ é calculada entre as dez
+instâncias de cada par $(n,p)$, após a seleção das três medições
+de cada algoritmo. As unidades diferentes são explícitas:
+milissegundos para o exato e microssegundos para a aproximação.
+O único timeout aleatório permanece como observação parcial.
+
+\input{tables/configurations}
+
+Para $p=0{,}5$, a mediana superior do exato entre instâncias
+passa de 0,062~ms em $n=10$ para 560,041~ms em $n=30$.
+Para $n=30$, varia de 0,054~ms em $p=0{,}1$ a
+3\,865,782~ms em $p=0{,}7$, com um timeout na última configuração.
+Na aproximação, as medianas das 20 configurações ficam entre
+0,70 e 6,40~$\mu$s. Esses números são observações da execução,
+e sua interpretação requer considerar a ordem da coleta e o
+ambiente da JVM.
+
+A Tabela~\ref{tab:sizes} agrega, para cada $n$, os 40 grafos
+aleatórios das quatro probabilidades. A mediana de nós explorados
+vai de 17 para 536\,777; a de podas, de 7 para 268\,385.
+Cada coluna é agregada separadamente, e não representa
+necessariamente uma mesma instância do grupo.
+
+\input{tables/sizes}
+
+A Figura~\ref{fig:runtime} exibe os tempos das 230 instâncias,
+incluindo as estruturadas. A escala logarítmica permite observar
+as diferentes ordens de grandeza. As duas cruzes vermelhas são
+tempos até interrupção, e não tempos completos para provar o
+ótimo. Não há tempos nulos omitidos neste corpus.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{01-runtime-vs-n.png}
+\caption{Tempo versus número de vértices nas 230 instâncias. São 460 pontos medidos, dois por grafo, sujeitos a sobreposição; o eixo vertical usa ms em escala logarítmica. Cruzes indicam timeout.}
+\label{fig:runtime}
+\end{figure}
+
+A Figura~\ref{fig:density} utiliza a densidade observada da
+Equação~\eqref{eq:density}, em vez de $p$. Ela reúne as sete
+famílias; portanto, não isola o efeito da densidade do efeito
+da estrutura ou de $n$. Para comparar configurações aleatórias
+com tamanho fixado, deve-se consultar também a
+Tabela~\ref{tab:configurations}.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{04-runtime-vs-density.png}
+\caption{Tempos em ms por densidade observada: 230 instâncias e 460 pontos. O eixo vertical é logarítmico; valores em timeout são parciais. Famílias e tamanhos diferentes estão reunidos.}
+\label{fig:density}
+\end{figure}
+\FloatBarrier
+
+\subsection{Qualidade das coberturas}
+
+A Tabela~\ref{tab:quality} apresenta as medidas da
+Equação~\eqref{eq:quality}, incluindo somente as
+\QualityInstances{} instâncias com ótimo comprovado e positivo.
+A razão média é \MeanRatio{}, a mediana é \MedianRatio{} e o
+gap médio é \MeanGap{}\%. Todas as razões elegíveis pertencem
+ao intervalo $[1,2]$. Há \FactorTwoInstances{} casos com razão
+exatamente dois. As \ZeroInstances{} instâncias com ótimo zero
+retornam cobertura aproximada vazia e não participam dessas
+estatísticas; os dois timeouts também são excluídos.
+
+\input{tables/quality}
+
+Nas instâncias com ótimo positivo, a aproximação coincide
+em cardinalidade com o ótimo em \EqualPositiveInstances{} casos:
+$K_{15}$ e $K_{25}$. Incluindo os cinco grafos sem arestas,
+são \EqualTotalInstances{} coincidências. Isso não muda o
+status do algoritmo aproximado para exato.
+
+A Figura~\ref{fig:cover-size} contém as 228 instâncias com
+ótimo comprovado, incluindo as cinco de ótimo zero.
+As referências $y=x$ e $y=2x$ delimitam a igualdade com
+o ótimo e a garantia teórica, respectivamente. A
+Figura~\ref{fig:ratio} contém apenas as 223 razões definidas.
+Pontos coincidentes não foram deslocados artificialmente.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{02-approx-vs-optimum.png}
+\caption{Cardinalidade aproximada versus ótima em 228 instâncias com prova. Os dois timeouts são excluídos; ótimos zero são incluídos. Linhas tracejadas são referências teóricas, não medições.}
+\label{fig:cover-size}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{03-ratio-vs-n.png}
+\caption{Razão de aproximação por número de vértices nas 223 instâncias elegíveis. Excluem-se dois timeouts e cinco ótimos zero. A linha em $R=2$ representa a garantia teórica.}
+\label{fig:ratio}
+\end{figure}
+\FloatBarrier
+
+\subsection{Famílias estruturadas e esforço de busca}
+
+A Tabela~\ref{tab:structured} apresenta os 30 grafos estruturados.
+O Branch and Bound comprova os valores de controle em 29 deles.
+Somente $K_{30}$ termina em timeout. Nos caminhos, estrelas
+e bipartidos completos deste conjunto, a aproximação utiliza
+exatamente o dobro do ótimo. Os ciclos ímpares têm razões menores
+que dois, e os completos ilustram coberturas aproximadas
+próximas do mínimo, sem que isso torne simples a certificação
+pela busca implementada.
+
+\input{tables/structured}
+
+A Figura~\ref{fig:nodes} apresenta todos os grafos, com
+$\text{nós}+1$ no eixo vertical logarítmico para representar
+também o caso zero. Grafos sem arestas não exigem estados
+de busca. Em $K_{20}$ e $K_{25}$, os estados explorados são
+524\,289 e 16\,777\,215, respectivamente; a razão entre
+essas contagens é próxima de 32 para cinco vértices adicionais.
+Em contraste, o bipartido completo com 30 vértices é resolvido
+com 31 estados. São diferenças de estrutura, não apenas de tamanho.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{05-explored-nodes.png}
+\caption{Estados explorados pelo Branch and Bound em 230 instâncias. O eixo vertical representa contagem mais um em escala logarítmica; cruzes vermelhas são contagens parciais de timeout.}
+\label{fig:nodes}
+\end{figure}
+\FloatBarrier
+
+\subsection{Instâncias interrompidas}
+
+A Tabela~\ref{tab:timeouts} detalha os timeouts selecionados:
+\path{random_n30_p0.7_i06}, com semente 20261311, e
+\path{complete_n30}. As melhores coberturas conhecidas têm
+tamanhos 26 e 29, enquanto a aproximação tem tamanhos 28 e 30.
+Nenhuma razão ou gap é calculado a partir desses pares.
+
+\input{tables/timeouts}
+
+As três medições de cada uma das duas instâncias foram
+interrompidas, explicando os seis timeouts individuais.
+O pequeno excesso em relação a 5\,000~ms é compatível com o
+controle cooperativo do código. O registro global de
+146,665~s inclui validação, exportação e progresso, não
+sendo um tempo individual nem uma soma exclusiva das
+chamadas dos algoritmos.
+\FloatBarrier

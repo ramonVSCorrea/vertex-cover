@@ -1,0 +1,116 @@
+\section{Análise dos Resultados}
+\label{sec:analysis}
+
+\subsection{Tempo, escalabilidade e estrutura}
+
+\textbf{Resultado observado.}
+A aproximação tem tempo menor nas \FasterApproxInstances{} de
+\TotalInstances{} comparações de execuções selecionadas, incluindo
+os grafos sem arestas. No exato, as medianas dos grupos aleatórios
+crescem com $n$ na Tabela~\ref{tab:sizes}. Para $p=0{,}5$,
+a diferença entre os extremos da grade é de várias ordens de
+grandeza, enquanto a aproximação permanece na escala de
+microssegundos.
+
+\textbf{Explicação possível.}
+A aproximação faz uma passagem pelas arestas e usa marcações
+por vértice. O exato, além do custo de sua incumbente inicial,
+recalcula graus e limites em numerosos estados e copia conjuntos
+de bits. A ampliação da árvore de busca observada é coerente
+com o comportamento exponencial possível dessa estratégia.
+Não se trata de uma demonstração experimental da notação
+assintótica: a justificativa de complexidade é algorítmica.
+
+\textbf{Limitação.}
+Os tempos aproximados não crescem monotonicamente com $n$.
+Por exemplo, a mediana agregada é 4,90~$\mu$s para $n=10$
+e 2,20~$\mu$s para $n=30$. Esse resultado não indica que o
+algoritmo se torna assintoticamente mais rápido. A coleta usa
+uma única JVM, instâncias em ordem fixa e grafos pequenos;
+otimização progressiva pelo compilador em tempo de execução,
+resolução do relógio, frequência da CPU e coleta de lixo
+podem afetar tempos tão curtos. O aquecimento reduz, mas
+não elimina esses fatores. Não houve múltiplas inicializações
+independentes da JVM nem cálculo de significância estatística.
+
+Na Tabela~\ref{tab:configurations}, aumentar $p$ com $n$ fixado
+está associado a maior tempo mediano do exato em todos os
+cinco tamanhos desta grade. A Figura~\ref{fig:density}, porém,
+não autoriza concluir que densidade sozinha determina a
+dificuldade. O bipartido completo com 30 vértices tem
+densidade aproximadamente 0,517 e tempo exato de 0,1362~ms,
+enquanto os aleatórios de $n=30,p=0{,}5$, de densidade média
+0,496, têm mediana de 560,041~ms. O arranjo das arestas e a
+qualidade dos limites também importam.
+
+\subsection{Otimalidade, limites e timeout}
+
+Os 228 resultados \texttt{OPTIMAL} indicam prova produzida pelo
+solver; os dois \texttt{TIME\_LIMIT} indicam apenas incumbentes
+válidas. Essa distinção é necessária mesmo em uma família
+com ótimo teórico conhecido. Em $K_{30}$, o tamanho 29
+coincide com a fórmula $n-1$, mas o algoritmo interrompido
+não concluiu sua própria certificação. O resultado continua
+classificado como timeout, e seus campos de ótimo, razão e
+gap permanecem \texttt{NA}.
+
+Uma explicação para o custo dos completos está na força do
+limite inferior. Em um completo residual com $r$ vértices,
+um matching tem $\lfloor r/2\rfloor$ arestas, enquanto o
+mínimo residual é $r-1$. O limite pode, portanto, ficar
+distante da quantidade realmente necessária, retardando
+podas. Já uma primeira cobertura de boa qualidade e limites
+mais próximos do mínimo favorecem outros grafos.
+A implementação não utiliza reconhecimento de completos,
+algoritmos especializados para bipartidos ou memorização
+de subproblemas residuais repetidos.
+
+As contagens de nós e podas sustentam a descrição do esforço
+da busca, mas não medem isoladamente o benefício de cada
+heurística. Não foram executadas versões sem limite
+inferior, sem ordenação por grau ou sem incumbente
+aproximada. Assim, atribuir uma aceleração quantitativa
+a uma dessas técnicas exigiria uma comparação adicional.
+Além disso, os nós e tempos de timeout são observações
+censuradas: não permitem estimar quantos estados ou quanto
+tempo faltava para concluir a prova.
+
+\subsection{Qualidade e compromisso entre os algoritmos}
+
+A aproximação respeita a garantia de fator~2 em todas as
+223 instâncias em que a razão pode ser avaliada.
+Seu fator médio de \MeanRatio{} corresponde ao gap médio
+de \MeanGap{}\%, e \FactorTwoInstances{} instâncias atingem
+exatamente o limite de fator~2. Caminhos, estrelas e
+bipartidos completos da suíte tornam visível que a garantia
+não é apenas um limite folgado sem ocorrência prática
+nesses dados.
+
+As coincidências com o ótimo em $K_{15}$ e $K_{25}$
+decorrem da cardinalidade dos extremos emparelhados nesses
+completos ímpares: o método deixa um vértice livre e
+seleciona $n-1$. São resultados particulares, não uma
+capacidade geral de reconhecer quando a solução é ótima.
+Nos grafos sem arestas, a coincidência é trivial e deve
+ser separada da análise de razão.
+
+A composição da amostra também influencia a média:
+o subconjunto aleatório elegível tem média
+\RandomMeanRatio{}, enquanto o estruturado elegível tem
+\StructuredMeanRatio{} (Tabela~\ref{tab:quality}).
+Essa diferença decorre das famílias e sementes escolhidas,
+e não demonstra superioridade estatística em uma população
+de grafos reais. Os dois timeouts não participam das
+estatísticas de qualidade; usar suas incumbentes como
+denominador produziria uma razão sem a interpretação
+de distância ao ótimo requerida.
+
+O Branch and Bound oferece a vantagem do certificado
+quando conclui, ao custo de tempo potencialmente elevado.
+O matching maximal oferece execução curta e uma garantia
+a priori, mas pode selecionar mais vértices. A escolha
+adequada depende de se exigir mínimo comprovado ou de
+se aceitar uma solução limitada pelo fator~2. A amostra,
+restrita a grafos sintéticos de até 30 vértices e a uma
+máquina, não sustenta superioridade universal, extrapolação
+para redes maiores ou conclusões sobre modelos ponderados.

@@ -1,0 +1,45 @@
+\section{Anexos: código-fonte}
+\label{app:source}
+
+As Listagens~\ref{lst:edge}--\ref{lst:benchmark} apresentam
+integralmente os arquivos centrais da implementação auditada.
+Eles foram copiados sem edição; a numeração corresponde às
+linhas de cada arquivo. O destaque tipográfico e a quebra
+visual de linhas são feitos pelo pacote \texttt{listings},
+sem alterar os fontes.
+
+O pacote eletrônico inclui, em \path{codigo/src/}, todos
+os arquivos da aplicação, inclusive leitura/exportação,
+gráficos, relatório e interface. Em \path{codigo/tests/}
+está o \texttt{TestRunner.java} completo. A
+Listagem~\ref{lst:tests} reproduz um trecho explicitamente
+delimitado desse teste, com o oráculo independente e as
+verificações de timeout. Assim, os anexos não são
+substituídos por um link externo.
+
+\subsection{Modelo e resultados}
+
+\lstinputlisting[caption={Edge.java: validação e normalização da aresta.},label={lst:edge}]{codigo/src/Edge.java}
+\lstinputlisting[caption={Graph.java: representação, adjacência, densidade e validação da cobertura.},label={lst:graph}]{codigo/src/Graph.java}
+\lstinputlisting[caption={VertexCoverSolution.java: cobertura com cópias defensivas.},label={lst:solution}]{codigo/src/VertexCoverSolution.java}
+\lstinputlisting[caption={SolverResult.java: status, tempo, contadores e indicação de prova.},label={lst:result}]{codigo/src/SolverResult.java}
+
+\subsection{Algoritmos}
+
+\lstinputlisting[caption={ExactBranchAndBound.java: busca exata, limites, ordenação e timeout.},label={lst:exact}]{codigo/src/ExactBranchAndBound.java}
+\lstinputlisting[caption={MatchingTwoApproximation.java: emparelhamento maximal e cobertura 2-aproximada.},label={lst:approx}]{codigo/src/MatchingTwoApproximation.java}
+
+\subsection{Geração e benchmark}
+
+\lstinputlisting[caption={GraphGenerator.java: famílias, sementes e manifesto das instâncias.},label={lst:generator}]{codigo/src/GraphGenerator.java}
+\lstinputlisting[caption={BenchmarkRunner.java: protocolo, validação, seleção por mediana e exportação.},label={lst:benchmark}]{codigo/src/BenchmarkRunner.java}
+
+\subsection{Trecho dos testes independentes}
+
+As linhas 123--207 do arquivo completo contêm a enumeração dos
+grafos de teste, a comparação dos algoritmos, o oráculo por
+subconjuntos e os testes de timeout. Os demais testes são
+descritos na Seção~\ref{sec:methodology} e estão no arquivo
+integral distribuído com o projeto LaTeX.
+
+\lstinputlisting[firstline=123,lastline=207,firstnumber=123,caption={TestRunner.java, trecho: força bruta independente e timeout.},label={lst:tests}]{codigo/tests/TestRunner.java}

@@ -1,0 +1,310 @@
+\section{Metodologia}
+\label{sec:methodology}
+
+\subsection{Artefatos, ambiente e reprodução}
+
+Foi adotada uma implementação em Java~17 que utiliza exclusivamente a
+biblioteca padrão do JDK. Os arquivos ficam em \path{src/} e
+\path{tests/}, no pacote padrão; a compilação é feita diretamente por
+\texttt{javac}, e a execução, por \texttt{java}. Não se empregam Maven,
+Gradle, Spring, JUnit nem bibliotecas externas. A interface atual
+oferece menu e um atalho Windows, mas esses recursos não modificam
+os dois algoritmos nem o contrato do benchmark.
+
+Os resultados analisados são os da execução original registrada em
+15/11/2026 às 12:21:50 UTC, com precisão adicional no arquivo de
+ambiente incluído no pacote. Usaram-se \path{data/results/benchmark.csv},
+\path{benchmark-runs.csv} no mesmo diretório e os seis PNGs associados.
+Não foram misturadas outras execuções guiadas, os oito grafos da
+demonstração rápida ou medições produzidas pelos testes de integração.
+A Tabela~\ref{tab:environment} sintetiza os dados verificados na
+documentação e no registro daquela execução.
+
+\begin{table}[htbp]
+\centering
+\caption{Ambiente e parâmetros da execução experimental original. A memória física foi consultada no sistema; o heap é o limite da JVM, não a RAM total.}
+\label{tab:environment}
+\small
+\begin{tabular}{p{0.27\textwidth}p{0.65\textwidth}}
+\toprule
+Item & Valor registrado \\
+\midrule
+Computador & Acer Nitro AN517-51 \\
+Processador & Intel Core i5-9300H, 2,40 GHz; 4 núcleos e 8 processadores lógicos \\
+Memória física & 17\,009\,004\,544 bytes (aproximadamente 15,84 GiB) \\
+Sistema operacional & Windows 11 Education, 10.0.26300, 64 bits \\
+JDK/JVM & Eclipse Temurin OpenJDK 17.0.20.1+1; OpenJDK 64-Bit Server VM \\
+Heap inicial/máximo & 128 MiB / 512 MiB \\
+Medições e aquecimento & 3 por algoritmo/instância; 100 pares de aquecimento separados \\
+Limite de tempo & 5\,000 ms por medição do algoritmo exato \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A compilação documentada usa codificação UTF-8, alvo Java~17,
+verificação de avisos e saída das classes no diretório \path{out/}.
+O benchmark executa a classe \texttt{Main}, com o comando
+\texttt{benchmark}, heap limitado conforme a tabela, codificação
+UTF-8 e AWT sem interface gráfica. Os parâmetros fixam três
+medições, 100 aquecimentos e timeout de 5\,000~ms.
+Os comandos completos, incluindo as opções do compilador
+e da JVM, estão no Anexo~\ref{app:reproducibility}.
+
+\subsection{Representação e validação dos grafos}
+
+A classe \texttt{Graph} conserva a quantidade de vértices, uma lista de
+arestas em ordem de inserção, listas de adjacência e um conjunto para
+detectar duplicatas. \texttt{Edge} normaliza os extremos para
+$(\min(u,v),\max(u,v))$. Laços, índices fora do intervalo e arestas
+repetidas são rejeitados; grafos desconexos e sem arestas são aceitos.
+A cobertura é representada por \texttt{VertexCoverSolution}, que
+encapsula um \texttt{BitSet} com cópias defensivas.
+
+Cada arquivo de entrada inicia com \texttt{n m} e contém exatamente
+$m$ pares de identificadores de $1$ a $n$. O leitor converte para
+$0,\ldots,n-1$ internamente; a saída textual volta à base um.
+O grafo do arquivo \path{exemplo.txt}, por exemplo, tem $n=5$ e
+arestas $(1,2)$, $(1,3)$, $(2,3)$, $(2,4)$, $(3,5)$ e $(4,5)$.
+A densidade observada é
+\begin{equation}
+ d(G)=
+ \begin{cases}
+  \dfrac{2|E|}{|V|(|V|-1)},& |V|\geq 2,\\[4pt]
+  0,& |V|<2.
+ \end{cases}
+ \label{eq:density}
+\end{equation}
+Ela é calculada das arestas presentes, e não substituída pelo parâmetro
+de geração $p$.
+
+\subsection{Algoritmo exato: Branch and Bound}
+\label{sec:exact}
+
+Cada estado contém a cobertura parcial $C$ e as arestas residuais $R$,
+que ainda não são cobertas por $C$. Inicialmente, uma execução da
+aproximação fornece a incumbente $C^\star$, isto é, a melhor cobertura
+válida conhecida. Escolhida uma aresta $\{u,v\}\in R$, toda cobertura
+que estenda o estado precisa selecionar $u$ ou $v$. Os dois ramos
+incluem um desses extremos e retiram de $R$ suas arestas incidentes.
+
+Um matching maximal guloso em $R$ fornece $LB=|M_R|$. Como as arestas
+desse matching são disjuntas nos extremos, qualquer cobertura residual
+requer ao menos $LB$ vértices adicionais. Portanto,
+\begin{equation}
+  |C|+LB\ \geq\ |C^\star|
+  \quad\Longrightarrow\quad
+  \text{o estado não pode melhorar estritamente a incumbente}.
+  \label{eq:bound}
+\end{equation}
+A condição da Equação~\eqref{eq:bound} permite podar o ramo sem perder uma solução melhor.
+Também se poda um estado não terminal quando $|C|\geq |C^\star|$.
+
+A aresta escolhida maximiza a soma dos graus residuais de seus extremos.
+Explora-se primeiro o extremo de maior grau; empates preservam a
+ordem das arestas e dos extremos normalizados. Essa é uma heurística
+de ordenação, não uma regra que altere a corretude da ramificação.
+Uma pilha \texttt{ArrayDeque} implementa a busca em profundidade, e
+cópias de \texttt{BitSet} isolam os estados. Um vértice selecionado
+não reaparece como extremo de uma aresta residual.
+O Algoritmo~\ref{alg:exact} resume esse procedimento. $\delta(v)$
+denota o conjunto de índices das arestas incidentes em $v$.
+
+\begin{algorithm}[htbp]
+\caption{Branch and Bound implementado, com pilha explícita}
+\label{alg:exact}
+\small
+\begin{algorithmic}[1]
+\Require Grafo $G=(V,E)$ e orçamento de tempo $T$.
+\Ensure Cobertura válida, status, tempo, nós $N$ e podas $P$.
+\State $t_0\gets\texttt{nanoTime}()$; $(C^\star,M_0)\gets\Call{Matching2}{G}$; $N\gets0$; $P\gets0$
+\State \textbf{se} $E=\varnothing$ \textbf{então retornar} $(C^\star,\texttt{OPTIMAL},N,P)$
+\State \textbf{se} orçamento esgotado \textbf{então retornar} $(C^\star,\texttt{TIME\_LIMIT},N,P)$
+\State Preparar arestas e incidências $\delta$ com verificações periódicas de tempo.
+\State Empilhar $(E,\varnothing)$.
+\While{a pilha não estiver vazia}
+  \State \textbf{se} orçamento esgotado \textbf{então retornar} $(C^\star,\texttt{TIME\_LIMIT},N,P)$
+  \State $(R,C)\gets$ desempilhar(); $N\gets N+1$
+  \If{$R=\varnothing$}
+    \State \textbf{se} $|C|<|C^\star|$ \textbf{então} $C^\star\gets C$
+    \State \textbf{continuar}
+  \EndIf
+  \If{$|C|\geq |C^\star|$}
+    \State $P\gets P+1$; \textbf{continuar}
+  \EndIf
+  \State Calcular graus residuais $D$ e $LB\gets|M_R|$ por matching guloso.
+  \State \textit{Verificar o tempo periodicamente nos percursos das arestas.}
+  \If{$|C|+LB\geq |C^\star|$}
+    \State $P\gets P+1$; \textbf{continuar}
+  \EndIf
+  \State Escolher $\{u,v\}\in R$ com maior $D(u)+D(v)$.
+  \State Ordenar $(a,b)\gets(u,v)$ de modo que $D(a)\geq D(b)$.
+  \State Empilhar cópias $(R\setminus\delta(b),C\cup\{b\})$.
+  \State Empilhar cópias $(R\setminus\delta(a),C\cup\{a\})$.
+\EndWhile
+\State \Return $(C^\star,\texttt{OPTIMAL},N,P)$
+\end{algorithmic}
+\end{algorithm}
+
+Todos os retornos registram também o tempo transcorrido desde $t_0$.
+As verificações periódicas de orçamento têm o mesmo efeito de
+retorno por timeout indicado antes dos estados.
+O invariante de $R$ garante a validade das folhas. A ramificação cobre
+todas as extensões possíveis, e a poda usa um limite inferior válido.
+Consequentemente, esgotar a pilha comprova que não há cobertura menor
+que $C^\star$. Somente nesse caso, ou no caso trivial sem arestas,
+retorna-se \texttt{OPTIMAL}. O pior caso permanece exponencial,
+$O(2^{|V|}\operatorname{poly}(|V|,|E|))$; ordenação e limites não
+oferecem garantia de tempo polinomial \cite{fomin2010}.
+
+O controle usa \texttt{System.nanoTime()}. Há verificações antes dos
+estados e a cada bloco de até 1\,024 iterações em laços internos
+relevantes. O timeout é cooperativo: preparação, operações em
+andamento ou coleta de lixo podem produzir pequeno excesso.
+Se a busca é interrompida com trabalho pendente, retorna
+\texttt{TIME\_LIMIT}, a incumbente e contadores parciais, sem prova
+de ótimo. O tempo inclui a aproximação inicial. Nós são os estados
+retirados da pilha; podas são os estados descartados pelos limites,
+não as folhas que atualizam a incumbente.
+
+\subsection{Algoritmo aproximado: matching maximal}
+\label{sec:approx}
+
+A classe \texttt{MatchingTwoApproximation} percorre as arestas na ordem
+preservada pelo grafo. Quando ambos os extremos estão livres,
+acrescenta a aresta ao matching e os dois extremos à cobertura.
+O Algoritmo~\ref{alg:approx} corresponde a essa implementação.
+
+\begin{algorithm}[htbp]
+\caption{Aproximação por emparelhamento maximal}
+\label{alg:approx}
+\small
+\begin{algorithmic}[1]
+\Require Grafo simples $G=(V,E)$ com ordem fixa das arestas.
+\Ensure Cobertura $C$ e matching maximal $M$.
+\State $C\gets\varnothing$; $M\gets\varnothing$; marcar todos os vértices como livres.
+\For{cada $\{u,v\}\in E$, em ordem}
+  \If{$u$ e $v$ estão livres}
+    \State $M\gets M\cup\{\{u,v\}\}$; $C\gets C\cup\{u,v\}$
+    \State Marcar $u$ e $v$ como usados.
+  \EndIf
+\EndFor
+\State \Return $(C,M)$
+\end{algorithmic}
+\end{algorithm}
+
+As marcações impedem extremos compartilhados. Se uma aresta terminasse
+com seus dois extremos livres, eles também estariam livres quando
+ela foi visitada, e a aresta teria sido escolhida. Logo, o matching
+é maximal e sua união de extremos cobre todas as arestas. Além disso,
+toda cobertura precisa de um vértice distinto para cada aresta de $M$,
+de modo que
+\begin{equation}
+  |M|\leq\OPT(G),\qquad |C|=2|M|\leq2\OPT(G).
+  \label{eq:factor}
+\end{equation}
+Isso demonstra a garantia de fator~2 \cite{cormen2022,vazirani2001}.
+O tempo é $O(|V|+|E|)$ e o espaço adicional para marcações e matching
+é $O(|V|)$. O status é \texttt{APPROXIMATE}, mesmo se a cardinalidade
+coincidir com o ótimo.
+
+\subsection{Instâncias e sementes}
+
+O conjunto experimental contém \RandomInstances{} grafos aleatórios
+$G(n,p)$. Foram utilizados cinco tamanhos (10, 15, 20, 25 e 30
+vértices), quatro probabilidades ($0{,}1$, $0{,}3$, $0{,}5$ e
+$0{,}7$) e dez instâncias por par de parâmetros.
+Cada par de vértices distintos é incluído com probabilidade $p$,
+conforme o modelo binomial de grafos aleatórios \cite{gilbert1959},
+frequentemente denominado Erdős--Rényi $G(n,p)$. Não se fixa $m$.
+
+Cada instância usa \texttt{new Random(seed)}. Percorrem-se os pares
+$u<v$ em ordem crescente e inclui-se a aresta quando
+\texttt{nextDouble() < p}. As sementes são $20261115+i$,
+$i=0,\ldots,199$, percorrendo primeiro $n$, depois $p$ e a repetição.
+O manifesto registra a semente de cada arquivo, de 20261115 a 20261314.
+
+Acrescentam-se \StructuredInstances{} grafos estruturados: para cada
+um dos cinco valores de $n$, um caminho $P_n$, um ciclo $C_n$,
+uma estrela $K_{1,n-1}$, um completo $K_n$, um bipartido completo
+$K_{\lfloor n/2\rfloor,\lceil n/2\rceil}$ e um grafo sem arestas.
+Seus ótimos teóricos são, respectivamente,
+$\lfloor n/2\rfloor$, $\lceil n/2\rceil$, $1$, $n-1$,
+$\lfloor n/2\rfloor$ e $0$. São controles de corretude, não
+substituições da busca exata no benchmark.
+
+\subsection{Medição, agregação e métricas}
+
+Antes das medições oficiais, a JVM executa 100 pares de algoritmos
+em grafos separados, com $n=8+(i\bmod3)$, $p=0{,}35$ e semente
+$-100000-i$, $i=0,\ldots,99$. Na coleta, cada algoritmo é executado
+três vezes sobre cada uma das \TotalInstances{} instâncias,
+totalizando \RawMeasurements{} medições por algoritmo.
+A ordem dos dois algoritmos é alternada pela paridade do índice da
+instância somado à repetição. Leitura, geração, validação posterior,
+impressões, CSV e gráficos ficam fora dos tempos individuais.
+
+O arquivo resumido seleciona, separadamente para cada algoritmo,
+a execução de tempo mediano. Em termos gerais, ordenam-se as $r$
+medições e seleciona-se o elemento de índice $\lfloor r/2\rfloor$,
+em base zero: a mediana superior. Com $r=3$, trata-se da mediana usual.
+Status, tamanho, nós e podas do exato são os da execução efetivamente
+selecionada; as duas colunas de tempo podem corresponder a diferentes
+repetições. Todas as medições permanecem no CSV individual.
+
+Para as tabelas deste artigo, a mesma convenção de mediana superior é
+aplicada entre as instâncias de um grupo. Os quartis usam os valores
+ordenados nas posições $\lceil0{,}25N\rceil$ e
+$\lceil0{,}75N\rceil$, em base um. Apresenta-se $[Q_1;Q_3]$ como
+dispersão entre instâncias, não como intervalo de confiança nem
+como dispersão temporal das três repetições de um mesmo grafo.
+Os tempos parciais de timeout são mantidos e identificados;
+nenhuma estimativa do tempo total de solução é imputada.
+
+Registram-se identificador, família, semente, $n$, $m$, densidade,
+$p$, status, tempos, tamanhos das coberturas, validade, prova de ótimo,
+nós e podas. Quando o ótimo é comprovado e positivo, calculam-se
+\begin{equation}
+  R=\frac{|C_{\mathrm{aprox}}|}{\OPT(G)},\qquad
+  \operatorname{Gap}(\%)=
+     \frac{|C_{\mathrm{aprox}}|-\OPT(G)}{\OPT(G)}\,100.
+  \label{eq:quality}
+\end{equation}
+Ótimo não comprovado ou igual a zero implica razão e gap
+\texttt{NA}. No caso zero, verifica-se separadamente a cobertura
+aproximada vazia. O tamanho da melhor solução conhecida continua
+preenchido em timeout, mas não ocupa o campo de ótimo.
+
+\subsection{Testes e auditoria dos resultados}
+
+O \texttt{TestRunner} atual reúne 16 grupos de verificações sem JUnit.
+O algoritmo exato é comparado com enumeração independente de
+subconjuntos em 1\,110 grafos: todos os $2^{\binom{5}{2}}=1\,024$
+grafos rotulados com cinco vértices, 85 grafos aleatórios com até
+16 vértices e um caminho de 20 vértices. O oráculo verifica as
+arestas diretamente, sem reutilizar o limite inferior ou a
+ramificação do exato.
+
+Também são verificados ótimos de famílias estruturadas, grafos
+desconexos, matching disjunto e maximal, validade das coberturas,
+garantia da Equação~\eqref{eq:factor}, índices, laços e duplicatas.
+Testes de timeout zero e positivo verificam a preservação da
+incumbente e a ausência de falso certificado de ótimo.
+Os grupos adicionais cobrem arquivos, CSV, medianas, imagens,
+argumentos, menu e preservação de resultados.
+
+Na preparação do relatório, as cópias literais do código foram
+compiladas com Java~17 e os 16 grupos passaram novamente. Essa
+verificação não substitui nem regrava o benchmark original.
+Um pós-processador Java separado, incluído no pacote do artigo,
+auditou as 690 linhas individuais, a seleção das medianas, as
+convenções de \texttt{NA}, as contagens e as sementes. Os grafos
+aleatórios e os tamanhos da aproximação foram reproduzidos.
+
+Os CSVs não guardam os vértices escolhidos pelo exato, apenas
+cardinalidades e flags; sua validade foi verificada pelo benchmark
+antes da exportação. A auditoria da exportação não é apresentada
+como uma reconstrução independente dessas coberturas. Os seis
+gráficos originais, gerados em Java2D/ImageIO a partir do CSV,
+foram copiados sem alteração. Tabelas e números agregados deste
+artigo são calculados das cópias dos CSVs, com hashes de integridade
+registrados no material suplementar.

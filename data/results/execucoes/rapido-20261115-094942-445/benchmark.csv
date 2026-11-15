@@ -1,0 +1,9 @@
+instance_id,family,seed,n,m,density,p,exact_status,exact_runtime_ns,exact_best_known_size,exact_optimal_size,exact_optimality_proven,exact_nodes_explored,exact_pruned_nodes,approx_runtime_ns,approx_solution_size,approx_valid,approximation_ratio,gap_percent,exact_valid,repetitions,exact_selected_repetition,approx_selected_repetition
+caminho_n10,path,NA,10,9,0.2,NA,OPTIMAL,138200,5,5,true,11,4,8300,10,true,2.0,100.0,true,3,1,2
+ciclo_n9,cycle,NA,9,9,0.25,NA,OPTIMAL,77899,5,5,true,11,4,5400,8,true,1.6,60.0,true,3,2,2
+estrela_n10,star,NA,10,9,0.2,NA,OPTIMAL,48801,1,1,true,3,1,7099,2,true,2.0,100.0,true,3,2,2
+completo_n10,complete,NA,10,45,1.0,NA,OPTIMAL,2269601,9,9,true,513,255,26400,10,true,1.1111111111111112,11.11111111111111,true,3,2,1
+bipartido_n10,complete_bipartite,NA,10,25,0.5555555555555556,NA,OPTIMAL,109499,5,5,true,11,5,12700,10,true,2.0,100.0,true,3,2,3
+sem_arestas_n10,empty,NA,10,0,0.0,NA,OPTIMAL,5200,0,0,true,0,0,3900,0,true,NA,NA,true,3,3,2
+aleatorio_n10_p03,erdos_renyi,20261115,10,10,0.2222222222222222,0.3,OPTIMAL,44601,4,4,true,11,4,5700,6,true,1.5,50.0,true,3,2,2
+aleatorio_n12_p05,erdos_renyi,20261116,12,32,0.48484848484848486,0.5,OPTIMAL,678201,8,8,true,119,58,19800,10,true,1.25,25.0,true,3,2,3

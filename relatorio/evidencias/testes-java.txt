@@ -1,0 +1,29 @@
+
+  ========================================================================================================
+  TESTES DE CORRETUDE
+  Sem JUnit. Os detalhes de integra├º├úo s├│ aparecem se houver uma falha.
+  ========================================================================================================
+  [ OK ] modelo, graus, densidade e isolados                                 45.651200 ms
+  [ OK ] valida├º├úo de arestas e ├¡ndices                                      13.709099 ms
+  [ OK ] imutabilidade e validade das solu├º├Áes                                5.536899 ms
+  [ OK ] aproxima├º├úo e matching maximal                                       3.368000 ms
+  [ OK ] exato e aproxima├º├úo contra for├ºa bruta independente                129.936701 ms
+  [ OK ] timeout preserva cobertura sem declarar ├│timo                        8.099000 ms
+  [ OK ] ├│timos de todas as fam├¡lias estruturadas                            27.376300 ms
+  [ OK ] geradores e reprodutibilidade de G(n,p)                              3.649099 ms
+  [ OK ] leitura, escrita e rejei├º├úo de arquivos inv├ílidos                  137.701200 ms
+  [ OK ] CSV: escaping e campos ausentes                                     19.045199 ms
+  [ OK ] 200 inst├óncias aleat├│rias + 30 estruturadas e manifesto            537.959199 ms
+  [ OK ] benchmark real, repeti├º├Áes, zero e timeout no CSV                   89.778600 ms
+  [ OK ] seis PNGs de CSV real e tratamento de NA/timeout                   974.897801 ms
+  [ OK ] interface e rejei├º├úo de argumentos inv├ílidos                         4.100100 ms
+  [ OK ] menu guiado, demonstra├º├úo e compara├º├úo com timeout                 258.108199 ms
+  [ OK ] experimento r├ípido completo sem sobrescrever dados                 783.764900 ms
+
+  ========================================================================================================
+  RESUMO DOS TESTES
+  Todas as verifica├º├Áes passaram.
+  ========================================================================================================
+  Grupos aprovados              : 16
+  Grupos reprovados             : 0
+  [INFO] Os arquivos tempor├írios dos testes n├úo alteram os experimentos salvos.

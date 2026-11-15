@@ -1,0 +1,22 @@
+﻿Title:           Uma Análise Experimental de Algoritmos para o Problema da Cobertura Mínima por Vértices
+Subject:         Projeto e Análise de Algoritmos – Java 17 puro – Vertex Cover
+Keywords:        vertex cover, branch and bound, maximal matching, approximation algorithms
+Author:          Ian Pereira Pinto Bomfim; João Miguel de Abreu Constâncio; Ramon Vinícius Silva Corrêa
+Creator:         LaTeX with hyperref
+Producer:        MiKTeX pdfTeX-1.40.28
+CreationDate:    Sun Nov 15 10:48:20 2026 Hora oficial do Brasil
+ModDate:         Sun Nov 15 10:48:20 2026 Hora oficial do Brasil
+Custom Metadata: yes
+Metadata Stream: no
+Tagged:          no
+UserProperties:  no
+Suspects:        no
+Form:            none
+JavaScript:      no
+Pages:           36
+Encrypted:       no
+Page size:       595.276 x 841.89 pts (A4)
+Page rot:        0
+File size:       768444 bytes
+Optimized:       no
+PDF version:     1.5

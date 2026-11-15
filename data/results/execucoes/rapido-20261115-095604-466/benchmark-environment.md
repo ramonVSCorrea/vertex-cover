@@ -1,0 +1,25 @@
+# Ambiente e parâmetros da execução
+
+- Data/hora UTC: 2026-11-15T12:56:04.581954Z
+- SO: Windows 11 10.0 (amd64)
+- Processadores lógicos disponíveis à JVM: 8
+- Processador informado pelo SO: Intel64 Family 6 Model 158 Stepping 13, GenuineIntel
+- Memória física informada pelo ambiente: não disponível (consulte docs/experimental-methodology.md)
+- Heap máximo da JVM (bytes): 536870912
+- Java: 17.0.20.1; fornecedor: Eclipse Adoptium; VM: OpenJDK 64-Bit Server VM
+- Comando Java: Main
+- Argumentos da JVM: [-Xms128m, -Xmx512m, -Dfile.encoding=UTF-8, -Djava.awt.headless=true]
+- Compilação documentada: javac -encoding UTF-8 --release 17 -Xlint:all -d out src/*.java tests/*.java
+- Instâncias: 8
+- Repetições medidas por instância/algoritmo: 3
+- Timeout do exato por execução: 1000 ms
+- Aquecimento: 20 pares de execuções, 6.293 ms; n=8..10, p=0.35, seed=-100000-i
+- Duração experimental incluindo validação/exportação/progresso: 0.060 s
+- Resumo: 8 OPTIMAL; 0 TIME_LIMIT
+- Execuções individuais interrompidas: 0 de 24
+- Resumo temporal: execução na mediana superior por algoritmo (índice floor(r/2), base zero).
+- Status, tamanho, nós e podas pertencem à execução exata selecionada; consulte também todos os runs.
+- Geração/leitura de grafos, validação e escrita CSV fora dos tempos individuais.
+- Todas as sementes e probabilidades estão no CSV e no manifesto; NA significa não aplicável/desconhecido.
+- Tempos do exato incluem seu upper bound inicial por aproximação.
+- O limite é cooperativo: o retorno pode exceder ligeiramente o orçamento durante preparação/GC.

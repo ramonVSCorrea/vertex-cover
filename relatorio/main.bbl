@@ -1,0 +1,40 @@
+\begin{thebibliography}{}
+
+\bibitem[Cormen et~al. 2022]{cormen2022}
+Cormen, T.~H., Leiserson, C.~E., Rivest, R.~L., and Stein, C. (2022).
+\newblock {\em Introduction to Algorithms}.
+\newblock The MIT Press, Cambridge, MA, 4 edition.
+
+\bibitem[Fomin and Kratsch 2010]{fomin2010}
+Fomin, F.~V. and Kratsch, D. (2010).
+\newblock {\em Exact Exponential Algorithms}.
+\newblock Texts in Theoretical Computer Science. An EATCS Series. Springer,
+  Berlin, Heidelberg.
+\newblock DOI: \url{https://doi.org/10.1007/978-3-642-16533-7}.
+
+\bibitem[Garey and Johnson 1979]{garey1979}
+Garey, M.~R. and Johnson, D.~S. (1979).
+\newblock {\em Computers and Intractability: A Guide to the Theory of
+  {NP}-Completeness}.
+\newblock W. H. Freeman, San Francisco.
+
+\bibitem[Gilbert 1959]{gilbert1959}
+Gilbert, E.~N. (1959).
+\newblock Random graphs.
+\newblock {\em The Annals of Mathematical Statistics}, 30(4):1141--1144.
+\newblock DOI: \url{https://doi.org/10.1214/aoms/1177706098}.
+
+\bibitem[Karp 1972]{karp1972}
+Karp, R.~M. (1972).
+\newblock Reducibility among combinatorial problems.
+\newblock In Miller, R.~E., Thatcher, J.~W., and Bohlinger, J.~D., editors,
+  {\em Complexity of Computer Computations}, pages 85--103. Plenum Press, New
+  York.
+\newblock DOI: \url{https://doi.org/10.1007/978-1-4684-2001-2_9}.
+
+\bibitem[Vazirani 2001]{vazirani2001}
+Vazirani, V.~V. (2001).
+\newblock {\em Approximation Algorithms}.
+\newblock Springer, Berlin, Heidelberg.
+
+\end{thebibliography}

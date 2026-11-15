@@ -1,0 +1,35 @@
+\section{Conclusão}
+\label{sec:conclusion}
+
+Este trabalho formalizou o Problema da Cobertura Mínima
+por Vértices, apresentou a NP-Completude de sua versão
+de decisão e comparou duas implementações em Java~17
+puro: Branch and Bound e matching maximal
+2-aproximado. Os testes independentes, os controles
+estruturados e a preservação de sementes e medições
+permitiram relacionar fundamentos e comportamento
+experimental de maneira auditável.
+
+Na execução analisada, o exato comprovou
+\OptimalInstances{} ótimos entre \TotalInstances{}
+instâncias e foi interrompido em duas; as três repetições
+dessas instâncias explicam os seis timeouts individuais.
+A aproximação apresentou menor tempo em todas as
+comparações selecionadas. Nas \QualityInstances{}
+instâncias com ótimo positivo comprovado, sua razão
+média foi \MeanRatio{}, sem violação do limite~2.
+Esse ganho de tempo veio acompanhado de coberturas
+eventualmente maiores, enquanto a certificação do mínimo
+impôs custos elevados ao exato em parte dos grafos.
+
+Os objetivos foram atendidos no escopo da implementação
+e do corpus utilizado, sem converter incumbentes após
+timeout em ótimos comprovados. Permanecem limitações
+de escala, de diversidade das instâncias e de controle
+da JVM. Como trabalhos futuros, propõem-se melhores
+incumbentes iniciais, limites inferiores mais fortes,
+redução ou memorização de subproblemas, avaliação
+separada das heurísticas, outras aproximações e estudo
+de grafos reais. Múltiplas execuções independentes da
+JVM e parametrizações pelo tamanho da cobertura
+também permitiriam aprofundar a análise.

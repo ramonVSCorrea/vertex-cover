@@ -1,0 +1,45 @@
+\section{Introdução}
+\label{sec:introduction}
+
+Problemas de otimização combinatória surgem quando é necessário escolher,
+entre alternativas discretas, uma solução de menor custo que satisfaça
+determinadas restrições. A quantidade de alternativas pode crescer
+exponencialmente com a entrada. Nesses casos, a escolha de uma estratégia
+algorítmica não envolve apenas obter uma solução: é preciso considerar
+o tempo disponível, a qualidade exigida e a possibilidade de demonstrar
+que não existe solução melhor \cite{cormen2022,fomin2010}.
+
+O Problema da Cobertura Mínima por Vértices, ou \emph{Minimum Vertex Cover},
+expressa essa tensão de forma particularmente clara. Dado um grafo, deseja-se
+selecionar o menor conjunto de vértices que contenha pelo menos uma
+extremidade de cada aresta. Essa condição permite modelar, sob hipóteses
+apropriadas, a seleção de pontos para observar conexões, inspecionar
+ligações de uma infraestrutura ou instrumentar relações entre componentes.
+A versão de decisão é NP-completa, enquanto a versão de otimização é
+NP-difícil \cite{karp1972,garey1979}.
+
+A dificuldade no pior caso não impede estudar algoritmos exatos úteis em
+instâncias limitadas. A técnica Branch and Bound organiza uma busca e
+elimina ramos quando limites demonstram que eles não podem melhorar a
+solução conhecida. Em contraste, algoritmos aproximados podem obter
+rapidamente uma cobertura válida com uma garantia matemática sobre sua
+cardinalidade. O método por emparelhamento maximal oferece garantia de
+fator~2 \cite{cormen2022,vazirani2001}. São propostas com compromissos
+distintos, cuja comparação exige não confundir uma boa solução com uma
+prova de otimalidade.
+
+O objetivo geral deste trabalho é analisar experimentalmente um Branch
+and Bound e uma aproximação por emparelhamento maximal, implementados
+em Java~17 puro, comparando tempo, qualidade das coberturas e esforço de
+busca em grafos de diferentes tamanhos e densidades. Os objetivos
+específicos são formalizar o problema e sua classificação; descrever e
+validar os dois algoritmos; gerar instâncias reproduzíveis; medir seu
+comportamento sob um limite de tempo; e discutir as vantagens e
+limitações sustentadas pelos dados.
+
+A Seção~\ref{sec:theory} apresenta os fundamentos, a demonstração de
+NP-Completude e outras abordagens. A Seção~\ref{sec:methodology} descreve
+a implementação, os testes e o protocolo. As Seções~\ref{sec:results}
+e~\ref{sec:analysis} apresentam e analisam os resultados, respectivamente.
+A Seção~\ref{sec:conclusion} sintetiza as conclusões. Os anexos incluem
+o código-fonte essencial e instruções de reprodução.
